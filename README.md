@@ -44,3 +44,6 @@ Install App
 * Python-App
 
 * Node-RED Flows
+
+* Raspberry Pi
+** sudo pigpiod # start gpio domain, localhost
