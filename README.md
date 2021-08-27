@@ -45,12 +45,13 @@ A raspberry pi project to control different ESC via an apple watch (HomeKit or o
 * https://nodered.org/docs/getting-started/raspberrypi (for a Raspberry Pi Zero you need an other install method)
 
 ## Install App
-
-# Configuration
-* Python-App
 ```
 > git clone https://github.com/vojj/BoatControl.git
 ```
+
+# Configuration
+* Python-App
+> Start manually or use Autostart
 
 * Node-RED Flows
 ```
