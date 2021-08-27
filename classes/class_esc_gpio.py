@@ -1,9 +1,15 @@
-#ESC Class
+#
+# This class provides a interface to control a esc.
+# Bugs and changes:
+# 26.08.21 - Initial - vojj
+# 
+#@author vojj
+#
 
 import os     #importing os library so as to communicate with the system
 import time   #importing time library to make Rpi wait because its too impatient
 import RPi.GPIO as GPIO
-import pigpio
+import pigpio # start pigpio on pi first!!
 
 
 class esc_gpio():
@@ -76,7 +82,6 @@ class esc_gpio():
             
     def speedZero(self):
         self.speed = 0
-        #self.motor.ChangeDutyCycle(0)
         self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
     
     def arm(self):
@@ -84,7 +89,7 @@ class esc_gpio():
         time.sleep(2)
         self.speedMin()
     
-    #This is the alibration procedure of a normal ESC
+    #This is the calibration procedure of a normal ESC
     def calibrate_step1(self):   
         self.speedZero()
         print("Step1 ready: Disconnect the battery and go to next step")
