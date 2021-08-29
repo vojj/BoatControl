@@ -6,9 +6,10 @@ A raspberry pi project to control different ESC via an apple watch (HomeKit or o
 * Usage on your own risk
 
 ## Goals
-* Phase1: Control two or more propellers (0.6KW to 1.2KW)
-* Phase1: User want to controll speed via an apple watch
-* Phase2: GPS support
+- [x] Phase1: Control two or more propellers (0.6KW to 1.2KW)
+- [x] Phase1: User want to controll speed via an apple watch
+- [ ] Phase2: Do control a bit more secure
+- [ ] Phase3: GPS support (SpeedControl)
 
 ## System overview
 * Raspberry Pi Zero W
