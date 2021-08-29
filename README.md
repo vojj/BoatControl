@@ -53,9 +53,10 @@ A raspberry pi project to control different ESC via an apple watch (HomeKit or o
 * Python-App
 > Start manually or use Autostart
 
-* Node-RED Flows
+* Node-RED Flows and setup homebridge
+Please look into the wiki to see the Node-RED examples.
 ```
-> sudo systemctl enable nodered.service
+> sudo systemctl enable nodered.service # Autostart Node-RED
 ```
 
 * Raspberry Pi - GPIO
