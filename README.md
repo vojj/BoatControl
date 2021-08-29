@@ -51,7 +51,9 @@ A raspberry pi project to control different ESC via an apple watch (HomeKit or o
 
 # Configuration
 ## Python-App
-> Start manually or use Autostart
+* Start manually or use autostart
+* For the PWM-Output the pi using GPIO18 and GPIO13 (5V, GND directly from the Pi as well)
+* !!! Please calibrate you ESC before usage !!!!
 
 ## Node-RED Flows and setup homebridge
 * Please look into the wiki to see the Node-RED examples (https://github.com/vojj/BoatControl/wiki/Node-RED-Example).
