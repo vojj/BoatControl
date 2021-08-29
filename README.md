@@ -1,5 +1,5 @@
 # BoatControl
-A raspberry pi project to control different ESC via an apple watch (HomeKit or others)
+A raspberry pi project to control different ESC via an apple watch (Home Kit, Nest, ...)
 
 ## Warning
 * This app is very new and only for testing
@@ -8,6 +8,8 @@ A raspberry pi project to control different ESC via an apple watch (HomeKit or o
 ## Goals
 - [x] Phase1: Control two or more propellers (0.6KW to 1.2KW)
 - [x] Phase1: User want to controll speed via an apple watch
+- [x] Phase1: Its working with WIFI
+- [ ] Phase1: Its working with Bluetooth
 - [ ] Phase2: Do control a bit more secure
 - [ ] Phase3: GPS support (SpeedControl)
 
