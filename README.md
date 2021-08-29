@@ -63,6 +63,7 @@ A raspberry pi project to control different ESC via an apple watch (HomeKit or o
 ```
 
 ## Raspberry Pi - GPIO
+* Activate Remote GPIO (Raspberry Pi Configuration / Interfaces / Remote GPIO - Enable
 ```
 > sudo pigpiod # start gpio domain, localhost
 > sudo systemctl enable pigpiod # Autostart at boot
