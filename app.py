@@ -19,6 +19,7 @@ import threading
 #my classes
 from classes.class_esc_gpio import esc_gpio
 from controllers.controller_motorSpeed import *
+from controllers.controller_shutdown import *
 from views.main import main
 
 #Init area
@@ -28,6 +29,8 @@ motor2 = esc_gpio(0,100,13,50) # GPIO18, PWM1
 #Init homebride values - speed
 cmdMotor1Speed = controller_motorSpeed(motor1,"Speed1","StartEngine","SpeedAll")
 cmdMotor2Speed = controller_motorSpeed(motor2,"Speed2","StartEngine","SpeedAll")
+
+shutdown = controller_shutdown()
 
 #App
 app = main("MyBoatControl",motor1,motor2)
