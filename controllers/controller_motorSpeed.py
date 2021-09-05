@@ -16,8 +16,9 @@ from functools import partial
 #my classes
 from classes.class_mqtt import mqtt_client
 
+
 class controller_motorSpeed():
-    def __init__(self,motor,nameSpeed,nameSwitch,nameSpeedAll):
+    def __init__(self,motor, nameSpeed, nameSwitch, nameSpeedAll):
         self.motor = motor
         self.motorSpeed = mqtt_client("localhost","homebridge",nameSpeed, service_type = "Lightbulb", characteristic = "Brightness", command = self.setSpeedMotor)
         self.motorSwitchOnOff = mqtt_client("localhost","homebridge",nameSwitch, command = self.startStop)
@@ -27,24 +28,24 @@ class controller_motorSpeed():
         
         self.sendMotorOff()
         
-    #get and set information via mqtt to homebridge
-    def setSpeedMotor(self,value):
+    # get and set information via mqtt to homebridge
+    def setSpeedMotor(self, value):
         self.currentMotorSpeed = value
         self.motor.forward(value)
     
-    #puplish speed
-    def sendSpeed(self,value):
+    # puplish speed
+    def sendSpeed(self, value):
         self.currentMotorSpeed = value
         self.motorSpeed.publish_value(value)
         
-    #puplish of
+    # puplish of
     def sendMotorOff(self):
         self.motorSwitchOnOff.publish_value(0)
         self.motorSpeedAll.publish_value(0)
         self.sendSpeed(0)
         
-    #callback function
-    def startStop(self,value):
+    # callback function
+    def startStop(self, value):
         self.sendSpeed(0)
         if(value ==  False):
             self.motor.SoftStop()
@@ -54,7 +55,7 @@ class controller_motorSpeed():
             print("Motors armed")
             
     #callback function
-    def setSpeedAll(self,value):
+    def setSpeedAll(self, value):
         self.currentMotorSpeed = value
         self.sendSpeed(value)
         self.motor.forward(value)

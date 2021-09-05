@@ -13,9 +13,9 @@ import pigpio # start pigpio on pi first!!
 
 
 class esc_gpio():
-    def __init__(self, min_toggle=0, max_toggle=100, esc_pin_for=13,freq=50):
-        self.minPulse = 1000;
-        self.maxPulse = 2000;
+    def __init__(self, min_toggle=0, max_toggle=100, esc_pin_for=13, freq=50):
+        self.minPulse = 1000
+        self.maxPulse = 2000
         self.ESC_GPIO = esc_pin_for
         self.motor = pigpio.pi()
         time.sleep(2)
@@ -23,6 +23,7 @@ class esc_gpio():
         self.max_toggle = max_toggle
         self.speed = self.min_toggle
         self.EStop()
+        self.enabled = False
         
     def EStop(self):
         self.speed = self.min_toggle
@@ -32,29 +33,36 @@ class esc_gpio():
         targetSpeed = self.min_toggle
         CurrentSpeed = self.speed
         self.speed = self.min_toggle
-        for x in range(CurrentSpeed,targetSpeed,-1):
+        for x in range(CurrentSpeed, targetSpeed, -1):
             self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(x))
             print("Speed:",x)
             time.sleep(0.1)
-       
+
+    def release(self, value: bool):
+        if not value:
+            self.enabled = False
+            self.EStop()
+        else:
+            self.enabled = True
+
     def getSpeed(self):
         return self.speed
         
-    def setSpeed(self,speed):
+    def setSpeed(self, speed):
         self.speed = speed
     
-    def forward(self,speed):
-        if(self.inRange(speed) == True):
+    def forward(self, speed):
+        if self.inRange(speed):
             self.speed = speed
             self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
            
     def inRange(self,speed):
-        print("Speed:",speed);
+        print("Speed:",speed)
         result = self.min_toggle <= speed <= self.max_toggle
         print("R:",result,"L:",self.min_toggle,"H:",self.max_toggle)
         return result
         
-    def speedUp(self,speedDif):
+    def speedup(self,speedDif):
         if(self.inRange(self.speed + speedDif) == True):
             self.speed = self.speed + speedDif
             self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
@@ -62,7 +70,7 @@ class esc_gpio():
     #speed 0 .. 100%
     def getPWM(self,speed):
         timeMS = speed * self.minPulse / 100 + self.minPulse
-        print("PulseWith:",timeMS);
+        print("PulseWith:",timeMS)
         return timeMS
     
     def speedMax(self):

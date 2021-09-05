@@ -4,10 +4,10 @@
 # Bugs and changes:
 # 28.08.21 - Initial - vojj
 # 
-#@author vojj
+# @author vojj
 #
 
-#Import
+# Import
 import tkinter as tk
 import tkinter.ttk as ttk
 
@@ -18,36 +18,37 @@ import threading
 
 from views.motor_control import *
 
-class main():
+
+class Main(object):
     def __init__(self, title, motor1, motor2):
-        #window
+        # window
         self.window = tk.Tk()
-        #Define hmi
+        # Define hmi
         self.bg = "black"
         self.fg = "white"
 
-        #window basics
+        # window basics
         self.window.title(title)
         self.window.geometry('600x400')
-        
-        #styles
+
+        # styles
         st = ttk.Style()
         st.theme_use('clam')
-        
-        #Start
+
+        # Start
         self.initFrames()
         self.initHead()
-        self.initMotor(self.frameMotor1,"--Motor1--",motor1)
-        self.initMotor(self.frameMotor2,"--Motor2--",motor2)
-        
+        self.initMotor(self.frameMotor1, "--Motor1--", motor1)
+        self.initMotor(self.frameMotor2, "--Motor2--", motor2)
+
     def mainLoop(self):
-        try:         
+        try:
             self.window.mainloop()
-        except:
+        finally:
             print("Good Bye")
 
     def initFrames(self):
-        #frames
+        # frames
         self.frameTop = ttk.Frame(master=self.window, height=100)
         self.frameTop.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
 
@@ -61,11 +62,11 @@ class main():
 
         self.frameButton = ttk.Frame(master=self.window, height=25)
         self.frameButton.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
-    
+
     def initHead(self):
-        #HMI Headline
-        self.title = ttk.Label(text="--BoatControl--", master = self.frameTop)
-        self.title.pack(fill=tk.X, side=tk.TOP,expand=True)
-        
-    def initMotor(self,targetFrame,title,motor):
-        motorControl = motor_control(targetFrame,title,motor)
+        # HMI Headline
+        self.title = ttk.Label(text="--BoatControl--", master=self.frameTop)
+        self.title.pack(fill=tk.X, side=tk.TOP, expand=True)
+
+    def initMotor(self, targetFrame, title, motor):
+        motorControl = motor_control(targetFrame, title, motor)
