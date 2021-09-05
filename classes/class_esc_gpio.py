@@ -10,7 +10,7 @@ import os     #importing os library so as to communicate with the system
 import time   #importing time library to make Rpi wait because its too impatient
 import RPi.GPIO as GPIO
 import pigpio # start pigpio on pi first!!
-
+from threading import Thread
 
 class esc_gpio():
     def __init__(self, min_toggle=0, max_toggle=100, esc_pin_for=13, freq=50):
@@ -30,6 +30,11 @@ class esc_gpio():
         self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
         
     def SoftStop(self):
+        thread = Thread(None,self.runSoftStop)
+        thread.start()
+    
+    #Thread
+    def runSoftStop(self):
         targetSpeed = self.min_toggle
         CurrentSpeed = self.speed
         self.speed = self.min_toggle
@@ -37,7 +42,7 @@ class esc_gpio():
             self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(x))
             print("Speed:",x)
             time.sleep(0.1)
-
+        
     def release(self, value: bool):
         if not value:
             self.enabled = False
@@ -62,7 +67,7 @@ class esc_gpio():
         print("R:",result,"L:",self.min_toggle,"H:",self.max_toggle)
         return result
         
-    def speedup(self,speedDif):
+    def speedUp(self,speedDif):
         if(self.inRange(self.speed + speedDif) == True):
             self.speed = self.speed + speedDif
             self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))

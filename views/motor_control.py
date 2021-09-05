@@ -10,7 +10,8 @@
 #Import
 import tkinter as tk
 import tkinter.ttk as ttk
-
+from threading import Thread
+import time
 from functools import partial
 
 class motor_control():
@@ -20,27 +21,36 @@ class motor_control():
         #HMI Motor1
         label = ttk.Label(text="--"+ title +"--", master = self.targetFrame)
         label.pack(fill=tk.X, side=tk.TOP,expand=True)
-
+        
         #scale
-        self.scaleSpeedMotor = 0
+        self.scaleMotorSpeed = 0
         self.initScale(self.targetFrame)
-        self.updateMotorSpeed()
+        
+        #Refresh thread
+        self.threadRefresh = Thread(None, self.refreshControls);
+        self.threadRefresh.start()
+        
         self.initControl(self.targetFrame,self.motor)
         
+    def refreshControls(self):
+        while True:
+            self.updateMotorSpeed()
+            time.sleep(0.3)
+        
     def setMotorSpeed(self,value):
-        if(self.scaleSpeedMotor != int(float(value))):
+        if(self.scaleMotorSpeed != int(float(value))):
             self.motor.forward(int(float(value)))
-            self.scaleSpeedMotor = int(float(value))
+            self.scaleMotorSpeed = int(float(value))
             
     def initScale(self,frame):
         self.scaleMotor1 = ttk.Scale(command = self.setMotorSpeed, master = frame, from_ = 0, to = 100, orient=tk.HORIZONTAL )
         self.scaleMotor1.pack(fill=tk.X, side=tk.TOP,expand=True)
 
+    #refresh scale
     def updateMotorSpeed(self):
             value = self.motor.getSpeed()
-            if(self.scaleSpeedMotor != self.motor.getSpeed()):
-                self.scaleMotor1.set(self.scaleSpeedMotor)
-            self.targetFrame.after(300,self.updateMotorSpeed)
+            if(self.scaleMotorSpeed != self.motor.getSpeed()):
+                self.scaleMotor1.set(self.scaleMotorSpeed)
 
     def initControl(self,frame,motor):
         cmdSpeedUp = partial(motor.speedUp, 1)

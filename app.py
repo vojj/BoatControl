@@ -27,22 +27,20 @@ from views.main import *
 motor1 = esc_gpio(0,100,18,50) # GPIO18, PWM0
 motor2 = esc_gpio(0,100,13,50) # GPIO18, PWM1
 
-# Init homebridde values - speed
+#Init i/o
+mainswitch1 = Controller_mainswitch(23, commandrelease=motor1.release)
+mainswitch2 = Controller_mainswitch(23, commandrelease=motor2.release)
+
+# Init homebridge values - speed
 cmdMotor1Speed = controller_motorSpeed(motor1,"Speed1","StartEngine","SpeedAll")
 cmdMotor2Speed = controller_motorSpeed(motor2,"Speed2","StartEngine","SpeedAll")
 
 shutdown = controller_shutdown()
 
-#Init i/o
-mainswitch = Controller_mainswitch(23, commandrelease=motor1.release)
-
 # App
 app = Main("MyBoatControl", motor1, motor2)
 
-if __name__ == "__main__":
-    # execute only if run as a script
-    # loops
-    app.mainLoop()
+app.mainLoop()
 
 #End
 print("Destroy all")

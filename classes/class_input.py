@@ -18,10 +18,10 @@ class Input:
         self.pi = Gpio(pin)
 
     def read(self):
-        return self.pi.read(self.pin)
+        return self.pi.read()
 
     def write(self, value: bool):
-        return self.pi.write(self.pin, value)
+        return self.pi.write(value)
 
     def __del__(self):
         # body of destructor
