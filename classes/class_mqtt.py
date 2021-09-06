@@ -11,29 +11,33 @@
 import paho.mqtt.client as mqtt
 import json
 from types import SimpleNamespace
+from threading import Thread
 from abc import ABC, abstractmethod
 
 class mqtt_client():
-    def __init__(self, url, path = "homebridge/from/#", service_name = "StartEngine", service_type = "Switch", characteristic = "On", command = None, port = 1883):
-        #Init fields
+    def __init__(self, url, path="homebridge/from/#", service_name="StartEngine", service_type="Switch", characteristic="On", command=None, port=1883):
+        # Init fields
         self.value = 0
-        self.name  = service_name
-        self.service_name  = service_name
-        self.service_type  = service_type
-        self.characteristic  = characteristic
-        #Init client
-        self.path_from = path + "/from/set" #read from homebridge
-        self.path_to = path + "/to/set" #write to homebridge
+        self.name = service_name
+        self.service_name = service_name
+        self.service_type = service_type
+        self.characteristic = characteristic
+        # Init client
+        self.path_from = path + "/from/set"  # read from homebridge
+        self.path_to = path + "/to/set"  # write to homebridge
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.client.on_subscribe = self.on_subscribe
         self.client.on_publish = self.on_publish
-        self.connect(url, port, 30)
+        # do connect async
+        thread = Thread(None, self.connect, args=(url, port, 30))
+        thread.start()
+        # start loop
         self.client.loop_start()
-        #commands
-        self._on_message  = command # delegate or function, _on_message(value)
-        print("MQTT "+ self.service_name +": Started")
+        # commands
+        self._on_message = command  # delegate or function, _on_message(value)
+        print("MQTT " + self.service_name + ": Started")
 
     def connect(self, url, port, timeout):
         try:
@@ -41,11 +45,11 @@ class mqtt_client():
         except Exception:
             print("MQTT: Connection Error")
 
-    def publish_value(self,value):
-        #Example payload: {"name":"SpeedAll","characteristic":"On","value":true}
-        payload = homebridge_payload_set(value = value, name = self.name, service_name =self.service_name, service_type =self.service_type, characteristic = self.characteristic)
+    def publish_value(self, value):
+        # Example payload: {"name":"SpeedAll","characteristic":"On","value":true}
+        payload = homebridge_payload_set(value=value, name=self.name, service_name=self.service_name, service_type=self.service_type, characteristic=self.characteristic)
         payload_json = json.dumps(payload.__dict__)
-        self.client.publish(self.path_to,payload_json)
+        self.client.publish(self.path_to, payload_json)
         
     def on_subscribe(self,client, userdata, mid, granted_qos):
         print("MQTT "+ self.service_name +": Subscribtion with result code "+str(granted_qos))
