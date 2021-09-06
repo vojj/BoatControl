@@ -5,10 +5,10 @@
 # 26.08.21 - Initial - vojj
 # 27.08.21 - add StopAll and publish new values via mqtt
 # 
-#@author vojj
+# @author vojj
 #
 
-#Import
+# import
 import tkinter as tk
 import tkinter.ttk as ttk
 
@@ -24,16 +24,16 @@ from controllers.controller_mainswitch import *
 from views.main import *
 
 # Init area
-motor1 = esc_gpio(0,100,18,50) # GPIO18, PWM0
-motor2 = esc_gpio(0,100,13,50) # GPIO18, PWM1
+motor1 = esc_gpio(0, 100, 18, 50)  # GPIO18, PWM0
+motor2 = esc_gpio(0, 100, 13, 50)  # GPIO18, PWM1
 
-#Init i/o
-mainswitch1 = Controller_mainswitch(23, commandrelease=motor1.release)
-mainswitch2 = Controller_mainswitch(23, commandrelease=motor2.release)
+# Init i/o
+mainswitch1 = Controller_mainswitch(23, commandrelease=motor1.setRelease)
+mainswitch2 = Controller_mainswitch(23, commandrelease=motor2.setRelease)
 
 # Init homebridge values - speed
-cmdMotor1Speed = controller_motorSpeed(motor1,"Speed1","StartEngine","SpeedAll")
-cmdMotor2Speed = controller_motorSpeed(motor2,"Speed2","StartEngine","SpeedAll")
+cmdMotor1Speed = controller_motorSpeed(motor1, "Speed1", "StartEngine", "SpeedAll")
+cmdMotor2Speed = controller_motorSpeed(motor2, "Speed2", "StartEngine", "SpeedAll")
 
 shutdown = controller_shutdown()
 
@@ -42,5 +42,5 @@ app = Main("MyBoatControl", motor1, motor2)
 
 app.mainLoop()
 
-#End
+# end
 print("Destroy all")

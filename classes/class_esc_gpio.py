@@ -33,20 +33,20 @@ class esc_gpio:
         self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
         
     def SoftStop(self):
-        thread = Thread(None,self.runSoftStop)
+        thread = Thread(None, self.runSoftStop)
         thread.start()
     
-    #Thread
+    # Thread
     def runSoftStop(self):
         targetSpeed = self.min_toggle
         CurrentSpeed = self.speed
         self.speed = self.min_toggle
         for x in range(CurrentSpeed, targetSpeed, -1):
             self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(x))
-            print("Speed:",x)
+            print("Speed:", x)
             time.sleep(0.1)
         
-    def release(self, value: bool):
+    def setRelease(self, value: bool):
         if not value:
             self.enabled = False
             self.EStop()
@@ -63,52 +63,66 @@ class esc_gpio:
         self.speed = speed
     
     def forward(self, speed):
-        if self.inRange(speed):
-            self.speed = speed
-            self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
-           
-    def inRange(self,speed):
-        print("Speed:",speed)
+        if self.enabled:
+            if self.inRange(speed):
+                self.speed = speed
+                self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
+        else:
+            print("ESC: not enabled")
+
+    def inRange(self, speed):
+        print("Speed:", speed)
         result = self.min_toggle <= speed <= self.max_toggle
-        print("R:",result,"L:",self.min_toggle,"H:",self.max_toggle)
+        print("R:", result, "L:", self.min_toggle, "H:", self.max_toggle)
         return result
         
-    def speedUp(self,speedDif):
-        if(self.inRange(self.speed + speedDif) == True):
-            self.speed = self.speed + speedDif
-            self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
-    
-    #speed 0 .. 100%
-    def getPWM(self,speed):
+    def speedUp(self, speedDif):
+        if self.enabled:
+            if self.inRange(self.speed + speedDif):
+                self.speed = self.speed + speedDif
+                self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
+        else:
+            print("ESC: not enabled")
+    # speed 0 .. 100%
+    def getPWM(self, speed):
         timeMS = speed * self.minPulse / 100 + self.minPulse
         print("PulseWith:",timeMS)
         return timeMS
     
     def speedMax(self):
-        self.speed = self.max_toggle
-        self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.maxPulse) # Maximum throttle.
-        
+        if self.enabled:
+            self.speed = self.max_toggle
+            self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.maxPulse) # Maximum throttle.
+        else:
+            print("ESC: not enabled")
+
     def speedMin(self):
         self.speed = self.min_toggle
         self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.minPulse) # Minimum throttle.
         
-    def speedDown(self,speedDif):
-        if(self.inRange(self.speed - speedDif) == True):
-            self.speed = self.speed - speedDif
-            self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
+    def speedDown(self, speedDif):
+        if self.enabled:
+            if self.inRange(self.speed - speedDif):
+                self.speed = self.speed - speedDif
+                self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
+            else:
+                self.speed = self.min_toggle
         else:
-            self.speed = self.min_toggle
-            
+            print("ESC: not enabled")
+
     def speedZero(self):
         self.speed = 0
         self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
     
     def arm(self):
-        self.speedZero()
-        time.sleep(2)
-        self.speedMin()
-    
-    #This is the calibration procedure of a normal ESC
+        if self.enabled:
+            self.speedZero()
+            time.sleep(2)
+            self.speedMin()
+        else:
+            print("ESC: not enabled")
+
+    # This is the calibration procedure of a normal ESC
     def calibrate_step1(self):   
         self.speedZero()
         print("Step1 ready: Disconnect the battery and go to next step")
