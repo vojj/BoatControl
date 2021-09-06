@@ -8,8 +8,10 @@
 
 import os     #importing os library so as to communicate with the system
 import time   #importing time library to make Rpi wait because its too impatient
-import pigpio # start pigpio on pi first!!
-
+try:
+    import pigpio # start pigpio on pi first!!
+except Exception:
+    from classes.class_gpio_mock import Gpio_mock as pigpio
 
 class Gpio:
     def __init__(self,  pin=13, direction=pigpio.INPUT):  # BCM GPIO13

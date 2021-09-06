@@ -8,11 +8,14 @@
 
 import os     #importing os library so as to communicate with the system
 import time   #importing time library to make Rpi wait because its too impatient
-import RPi.GPIO as GPIO
-import pigpio # start pigpio on pi first!!
+try:
+    import pigpio  # start pigpio on pi first!!
+except Exception:  # Fallback for non pi env
+    from classes.class_gpio_mock import Gpio_mock as pigpio
 from threading import Thread
 
-class esc_gpio():
+
+class esc_gpio:
     def __init__(self, min_toggle=0, max_toggle=100, esc_pin_for=13, freq=50):
         self.minPulse = 1000
         self.maxPulse = 2000

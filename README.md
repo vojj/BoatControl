@@ -17,14 +17,17 @@ A raspberry pi project to control different ESC via an apple watch (Home Kit, Ne
 * Raspberry Pi Zero W
 * 2x ESC (PWM-Control Input)
 * 2x Propellers
-* Current und voltage measurement of battery curcuit
+* Current und voltage measurement of battery circuit
 * Fuses and Co.
 * Battery (LifePo4)
 
 # Software overview
-* Homebridge and Homebridge MQTT
+* Homebridge and Homebridge MQTT (homebridge.io)
 * MQTT Broker
 * Python-APP with GUI (Calibration and control, MQTT Client)
+> **pigpio** and uses a mock up class to do tests in windows env
+> 
+> paho.MQQT
 * Node-RED flows (Setup MQTT)
 * My apple watch or iPhone (Control (on, off, speed))
 
