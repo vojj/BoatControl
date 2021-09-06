@@ -15,42 +15,58 @@ import time
 from functools import partial
 
 class motor_control():
-    def __init__(self,targetFrame,title,motor):
+    def __init__(self, targetFrame, title, motor):
         self.targetFrame = targetFrame
         self.motor = motor
         #HMI Motor1
-        label = ttk.Label(text="--"+ title +"--", master = self.targetFrame)
-        label.pack(fill=tk.X, side=tk.TOP,expand=True)
+        label = ttk.Label(text="--" + title + "--", master=self.targetFrame)
+        label.pack(fill=tk.X, side=tk.TOP, expand=True)
         
-        #scale
+        # scale
         self.scaleMotorSpeed = 0
+        self.scaleMotor1 = None
         self.initScale(self.targetFrame)
-        
-        #Refresh thread
-        self.threadRefresh = Thread(None, self.refreshControls);
+
+        # Init
+        self.labelStatusRelease = None
+        self.initControl(self.targetFrame, self.motor)
+
+        # refresh thread
+        self.threadRefresh = Thread(None, self.refreshControls)
         self.threadRefresh.start()
-        
-        self.initControl(self.targetFrame,self.motor)
+
         
     def refreshControls(self):
         while True:
             self.updateMotorSpeed()
+            self.updateStatusRelease()
             time.sleep(0.3)
         
-    def setMotorSpeed(self,value):
-        if(self.scaleMotorSpeed != int(float(value))):
+    def setMotorSpeed(self, value):
+        if self.scaleMotorSpeed != int(float(value)):
             self.motor.forward(int(float(value)))
             self.scaleMotorSpeed = int(float(value))
             
-    def initScale(self,frame):
-        self.scaleMotor1 = ttk.Scale(command = self.setMotorSpeed, master = frame, from_ = 0, to = 100, orient=tk.HORIZONTAL )
-        self.scaleMotor1.pack(fill=tk.X, side=tk.TOP,expand=True)
+    def initScale(self, frame):
+        self.scaleMotor1 = ttk.Scale(command=self.setMotorSpeed, master=frame, from_= 0, to=100, orient=tk.HORIZONTAL)
+        self.scaleMotor1.pack(fill=tk.X, side=tk.TOP, expand=True)
 
     #refresh scale
     def updateMotorSpeed(self):
             value = self.motor.getSpeed()
             if(self.scaleMotorSpeed != self.motor.getSpeed()):
                 self.scaleMotor1.set(self.scaleMotorSpeed)
+
+    def updateStatusRelease(self):
+        value = self.motor.getRelease()
+        if value:
+            self.labelStatusRelease.config(background="green")
+        else:
+            self.labelStatusRelease.config(background="red")
+
+    def initReleaseStatus(self, frame):
+        self.labelStatusRelease = ttk.Label(text="  R  ", master=frame)
+        self.labelStatusRelease.pack(fill=tk.X, side=tk.TOP, expand=True)
 
     def initControl(self,frame,motor):
         cmdSpeedUp = partial(motor.speedUp, 1)
@@ -63,6 +79,8 @@ class motor_control():
 
         button = ttk.Button(text="Arm", master = frame, command = motor.arm)
         button.pack(fill=tk.X, side=tk.TOP,expand=True)
+
+        self.initReleaseStatus(frame)
 
         button = ttk.Button(text="Stop", master = frame, command = motor.SoftStop)
         button.pack(fill=tk.X, side=tk.TOP,expand=True)

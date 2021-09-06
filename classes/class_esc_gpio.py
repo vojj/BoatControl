@@ -53,6 +53,9 @@ class esc_gpio:
         else:
             self.enabled = True
 
+    def getRelease(self):
+        return self.enabled
+
     def getSpeed(self):
         return self.speed
         
