@@ -29,12 +29,18 @@ class mqtt_client():
         self.client.on_message = self.on_message
         self.client.on_subscribe = self.on_subscribe
         self.client.on_publish = self.on_publish
-        self.client.connect(url, port, 30)
+        self.connect(url, port, 30)
         self.client.loop_start()
         #commands
         self._on_message  = command # delegate or function, _on_message(value)
         print("MQTT "+ self.service_name +": Started")
-        
+
+    def connect(self, url, port, timeout):
+        try:
+            self.client.connect(url, port, timeout)
+        except Exception:
+            print("MQTT: Connection Error")
+
     def publish_value(self,value):
         #Example payload: {"name":"SpeedAll","characteristic":"On","value":true}
         payload = homebridge_payload_set(value = value, name = self.name, service_name =self.service_name, service_type =self.service_type, characteristic = self.characteristic)
