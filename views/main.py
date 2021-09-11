@@ -10,6 +10,7 @@
 # Import
 import tkinter as tk
 import tkinter.ttk as ttk
+from tkinter import messagebox
 
 from functools import partial
 import os
@@ -41,8 +42,13 @@ class Main(object):
         self.initMotor(self.frameMotor1, "--Motor1--", motor1)
         self.initMotor(self.frameMotor2, "--Motor2--", motor2)
 
+    def on_closing(self):
+        if messagebox.askokcancel("Quit", "Do you want to quit?"):
+            self.window.destroy()
+
     def mainLoop(self):
         try:
+            self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
             self.window.mainloop()
         finally:
             print("Good Bye")
