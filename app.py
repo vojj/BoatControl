@@ -32,8 +32,8 @@ motor1 = esc_gpio(0, 100, 18, 50, event=event)  # GPIO18, PWM0
 motor2 = esc_gpio(0, 100, 13, 50, event=event)  # GPIO18, PWM1
 
 # Init i/o
-mainswitch1 = Controller_mainswitch(23, commandrelease=motor1.setRelease)
-mainswitch2 = Controller_mainswitch(23, commandrelease=motor2.setRelease)
+mainswitch1 = Controller_mainswitch(23, commandrelease=motor1.setRelease, event=event)
+mainswitch2 = Controller_mainswitch(23, commandrelease=motor2.setRelease, event=event)
 
 # Init homebridge values - speed
 cmdMotor1Speed = controller_motorSpeed(motor1, "Speed1", "StartEngine", "SpeedAll")
