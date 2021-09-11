@@ -79,6 +79,7 @@ class mqtt_client():
                 
     def __del__(self):
         # body of destructor
+        self.client.disconnect()
         print("MQTT:DEL Class")
        
     def destroy(self):

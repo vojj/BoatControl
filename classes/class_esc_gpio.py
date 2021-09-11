@@ -26,8 +26,37 @@ class esc_gpio:
         self.max_toggle = max_toggle
         self.speed = self.min_toggle
         self.EStop()
+
+        # Start thread
+        self.state = "Init"
         self.enabled = False
-        
+        self.runThread = True
+        self.thread = Thread(None, self.run)
+        self.thread.start()
+
+    # state model to be sure all inputs are safe
+    def run(self):
+        while self.runThread:
+            if self.state == "Init":
+                self.stateInit()
+            elif self.state == "Normal":
+                self.stateNormal()
+            time.sleep(0.2)
+
+    def stateInit(self):
+        if self.enabled:
+            self.state = "Normal"
+        else:
+            if self.speed > 0:
+                self.speed = 0
+                self.EStop(0)
+            print("ESC GPIO: Init - Please enable")
+            time.sleep(1)
+
+    def stateNormal(self):
+        if not self.enabled:
+            self.state = "Init"
+
     def EStop(self):
         self.speed = self.min_toggle
         self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
@@ -92,13 +121,13 @@ class esc_gpio:
     def speedMax(self):
         if self.enabled:
             self.speed = self.max_toggle
-            self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.maxPulse) # Maximum throttle.
+            self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.maxPulse)  # Maximum throttle.
         else:
             print("ESC: not enabled")
 
     def speedMin(self):
         self.speed = self.min_toggle
-        self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.minPulse) # Minimum throttle.
+        self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.minPulse)  # Minimum throttle.
         
     def speedDown(self, speedDif):
         if self.enabled:
@@ -129,29 +158,24 @@ class esc_gpio:
     
     def calibrate_step2(self):
         self.speedMax()
-        time.sleep (2)
+        time.sleep(2)
         print("Step2 ready:Connect the battery NOW.. you will here two beeps, then wait for a gradual falling tone then go to next step")
         
     def calibrate_step3(self):
         self.speedMin()
-        print ("Special tone")
+        print("Special tone")
         time.sleep(7)
-        print ("Wait....")
+        print("Wait....")
         time.sleep (5)
-        print ("I am processing, DONT WORRY, JUST WAIT.....")
+        print("I am processing, DONT WORRY, JUST WAIT.....")
         self.motor.set_servo_pulsewidth(self.ESC_GPIO, 0)
         time.sleep(2)
-        print ("Arming ESC now...")
+        print("Arming ESC now...")
         self.speedMin()
         time.sleep(1)
-        print ("See.... uhhhhh")
+        print("See.... uhhhhh")
         
     def __del__(self):
         # body of destructor
+        self.runThread = False
         print("DEL ESC")
-        #GPIO.cleanup()
-       
-    def destroy(self):
-        # body of destructor
-        print("Destroy ESC")
-        #GPIO.cleanup()
