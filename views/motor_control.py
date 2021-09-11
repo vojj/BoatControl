@@ -16,12 +16,15 @@ from functools import partial
 
 
 class motor_control():
-    def __init__(self, targetFrame, title, motor):
+    def __init__(self, targetFrame, title, motor, event=None):
         self.targetFrame = targetFrame
         self.motor = motor
         # HMI Motor1
         label = ttk.Label(text="--" + title + "--", master=self.targetFrame)
         label.pack(fill=tk.X, side=tk.TOP, expand=True)
+
+        # events
+        event.register("on_quit", self.on_quit)
 
         # scale
         self.scaleMotorSpeed = 0
@@ -38,6 +41,12 @@ class motor_control():
         self.runThread = True
         self.threadRefresh = Thread(None, self.refreshControls)
         self.threadRefresh.start()
+
+    # event handler
+    def on_quit(self, *args, **kwargs):
+        data = kwargs.get('data')
+        print('I got data from somewhere (motor_control): {}'.format(data))
+        self.__del__()
 
     def refreshControls(self):
         while self.runThread:

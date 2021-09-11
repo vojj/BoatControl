@@ -18,14 +18,18 @@ import threading
 
 # my classes
 from classes.class_esc_gpio import esc_gpio
+from classes.eventhandler import *
 from controllers.controller_motorSpeed import *
 from controllers.controller_shutdown import *
 from controllers.controller_mainswitch import *
 from views.main import *
 
+# Event handler
+event = eventhandler()
+
 # Init area
-motor1 = esc_gpio(0, 100, 18, 50)  # GPIO18, PWM0
-motor2 = esc_gpio(0, 100, 13, 50)  # GPIO18, PWM1
+motor1 = esc_gpio(0, 100, 18, 50, event=event)  # GPIO18, PWM0
+motor2 = esc_gpio(0, 100, 13, 50, event=event)  # GPIO18, PWM1
 
 # Init i/o
 mainswitch1 = Controller_mainswitch(23, commandrelease=motor1.setRelease)
@@ -38,8 +42,7 @@ cmdMotor2Speed = controller_motorSpeed(motor2, "Speed2", "StartEngine", "SpeedAl
 shutdown = controller_shutdown()
 
 # App
-app = Main("MyBoatControl", motor1, motor2)
-
+app = Main("MyBoatControl", motor1, motor2, event=event)
 app.mainLoop()
 
 # end

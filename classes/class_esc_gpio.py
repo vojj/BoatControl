@@ -16,7 +16,7 @@ from threading import Thread
 
 
 class esc_gpio:
-    def __init__(self, min_toggle=0, max_toggle=100, esc_pin_for=13, freq=50):
+    def __init__(self, min_toggle=0, max_toggle=100, esc_pin_for=13, freq=50, event=None):
         self.minPulse = 1000
         self.maxPulse = 2000
         self.ESC_GPIO = esc_pin_for
@@ -27,11 +27,15 @@ class esc_gpio:
         self.speed = self.min_toggle
         self.EStop()
 
+        # events
+        event.register("on_quit", self.on_quit)
+
         # Start thread
         self.state = "Init"
         self.enabled = False
         self.runThread = True
-        self.thread = Thread(None, self.run)
+        self.thread = Thread(group=None, target=self.run, name="daemon")
+        self.thread.daemon = True
         self.thread.start()
 
     # state model to be sure all inputs are safe
@@ -42,6 +46,12 @@ class esc_gpio:
             elif self.state == "Normal":
                 self.stateNormal()
             time.sleep(0.2)
+
+    # event handler
+    def on_quit(self, *args, **kwargs):
+        data = kwargs.get('data')
+        print('I got data from somewhere (ESC): {}'.format(data))
+        self.__del__()
 
     def stateInit(self):
         if self.enabled:
@@ -62,7 +72,7 @@ class esc_gpio:
         self.motor.set_servo_pulsewidth(self.ESC_GPIO, self.getPWM(self.speed))
         
     def SoftStop(self):
-        thread = Thread(None, self.runSoftStop)
+        thread = Thread(group=None, target=self.runSoftStop, name="daemon")
         thread.start()
     
     # Thread

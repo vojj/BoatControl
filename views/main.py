@@ -11,7 +11,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import messagebox
-
+from pydispatch import Dispatcher
 from functools import partial
 import os
 import time
@@ -21,7 +21,7 @@ from views.motor_control import *
 
 
 class Main(object):
-    def __init__(self, title, motor1, motor2):
+    def __init__(self, title, motor1, motor2, event=None):
         # window
         self.window = tk.Tk()
         # Define hmi
@@ -31,6 +31,9 @@ class Main(object):
         # window basics
         self.window.title(title)
         self.window.geometry('600x400')
+
+        # events
+        self.events = event
 
         # styles
         st = ttk.Style()
@@ -45,6 +48,7 @@ class Main(object):
     def on_closing(self):
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
             self.window.destroy()
+            self.events.do_quit()
 
     def mainLoop(self):
         try:
@@ -75,4 +79,4 @@ class Main(object):
         self.title.pack(fill=tk.X, side=tk.TOP, expand=True)
 
     def initMotor(self, targetFrame, title, motor):
-        motorControl = motor_control(targetFrame, title, motor)
+        motorControl = motor_control(targetFrame, title, motor, event=self.events)

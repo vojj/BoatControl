@@ -29,6 +29,7 @@ class Controller_mainswitch:
 
         # Start thread
         self.thread = Thread(None, self.run)
+        self.thread.daemon = True
         self.thread.start()
 
 
