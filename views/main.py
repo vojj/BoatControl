@@ -18,10 +18,11 @@ import time
 import threading
 
 from views.motor_control import *
+from classes.eventhandler import *
 
 
 class Main(object):
-    def __init__(self, title, motor1, motor2, event=None):
+    def __init__(self, title, motor1, motor2):
         # window
         self.window = tk.Tk()
         # Define hmi
@@ -33,7 +34,7 @@ class Main(object):
         self.window.geometry('600x400')
 
         # events
-        self.events = event
+        self.events = EventDispatcher()
 
         # styles
         st = ttk.Style()
@@ -79,4 +80,4 @@ class Main(object):
         self.title.pack(fill=tk.X, side=tk.TOP, expand=True)
 
     def initMotor(self, targetFrame, title, motor):
-        motorControl = motor_control(targetFrame, title, motor, event=self.events)
+        motorControl = motor_control(targetFrame, title, motor)

@@ -13,6 +13,7 @@ import time
 
 # my classes
 from classes.class_input import *
+from classes.eventhandler import *
 
 
 class Controller_mainswitch:
@@ -26,6 +27,7 @@ class Controller_mainswitch:
         self.state = "Init"
 
         # events
+        event = EventDispatcher()
         event.register("on_quit", self.on_quit)
 
         self._on_release = commandrelease  # one arg 0 = no release  1 = release

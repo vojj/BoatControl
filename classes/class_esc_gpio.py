@@ -13,10 +13,11 @@ try:
 except Exception:  # Fallback for non pi env
     from classes.class_gpio_mock import Gpio_mock as pigpio
 from threading import Thread
+from classes.eventhandler import *
 
 
 class esc_gpio:
-    def __init__(self, min_toggle=0, max_toggle=100, esc_pin_for=13, freq=50, event=None):
+    def __init__(self, min_toggle=0, max_toggle=100, esc_pin_for=13, freq=50):
         self.minPulse = 1000
         self.maxPulse = 2000
         self.ESC_GPIO = esc_pin_for
@@ -28,6 +29,7 @@ class esc_gpio:
         self.EStop()
 
         # events
+        event = EventDispatcher()
         event.register("on_quit", self.on_quit)
 
         # Start thread

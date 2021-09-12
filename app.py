@@ -24,16 +24,17 @@ from controllers.controller_shutdown import *
 from controllers.controller_mainswitch import *
 from views.main import *
 
-# Event handler
-event = eventhandler()
+# global event handler
+_event = None
+_event = EventDispatcher()
 
 # Init area
-motor1 = esc_gpio(0, 100, 18, 50, event=event)  # GPIO18, PWM0
-motor2 = esc_gpio(0, 100, 13, 50, event=event)  # GPIO18, PWM1
+motor1 = esc_gpio(0, 100, 18, 50)  # GPIO18, PWM0
+motor2 = esc_gpio(0, 100, 13, 50)  # GPIO18, PWM1
 
 # Init i/o
-mainswitch1 = Controller_mainswitch(23, commandrelease=motor1.setRelease, event=event)
-mainswitch2 = Controller_mainswitch(23, commandrelease=motor2.setRelease, event=event)
+mainswitch1 = Controller_mainswitch(23, commandrelease=motor1.setRelease)
+mainswitch2 = Controller_mainswitch(23, commandrelease=motor2.setRelease)
 
 # Init homebridge values - speed
 cmdMotor1Speed = controller_motorSpeed(motor1, "Speed1", "StartEngine", "SpeedAll")
@@ -42,7 +43,7 @@ cmdMotor2Speed = controller_motorSpeed(motor2, "Speed2", "StartEngine", "SpeedAl
 shutdown = controller_shutdown()
 
 # App
-app = Main("MyBoatControl", motor1, motor2, event=event)
+app = Main("MyBoatControl", motor1, motor2)
 app.mainLoop()
 
 # end

@@ -7,18 +7,30 @@
 
 from pydispatch import Dispatcher
 
-class eventhandler(Dispatcher):
-    def __init__(self):
-        pass
+_event = None
 
-    # Events are defined in classes and subclasses with the '_events_' attribute
-    _events_ = ['on_quit']
+
+class EventDispatcher:
+
+    def __init__(self, event=None):
+        global _event
+        if _event is None:
+            _event = Eventhandler()
+
     def do_quit(self):
         # do stuff that makes new data
         data = "PleaseKillAllThread"
         # Then emit the change with optional positional and keyword arguments
-        self.emit('on_quit', data=data)
+        _event.emit('on_quit', data=data)
 
     def register(self, name, callback):
         kwargs = {name: callback}
-        self.bind(**kwargs)
+        _event.bind(**kwargs)
+
+
+class Eventhandler(Dispatcher):
+    def __init__(self, event=None):
+        pass
+
+    # Events are defined in classes and subclasses with the '_events_' attribute
+    _events_ = ['on_quit']

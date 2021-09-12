@@ -13,6 +13,7 @@ import tkinter.ttk as ttk
 from threading import Thread
 import time
 from functools import partial
+from classes.eventhandler import *
 
 
 class motor_control():
@@ -24,6 +25,7 @@ class motor_control():
         label.pack(fill=tk.X, side=tk.TOP, expand=True)
 
         # events
+        event = EventDispatcher()
         event.register("on_quit", self.on_quit)
 
         # scale
