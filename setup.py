@@ -9,6 +9,6 @@ setup(name='BoatControl',
       license='MIT',
       install_requires=[
           'paho-mqtt',
-          'pydispatch',
+          'python-dispatch',
       ],
       zip_safe=False)
