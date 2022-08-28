@@ -18,7 +18,7 @@ from classes.class_mqtt import mqtt_client
 
 
 class controller_motorSpeed():
-    def __init__(self,motor, nameSpeed, nameSwitch, nameSpeedAll):
+    def __init__(self, motor, nameSpeed, nameSwitch, nameSpeedAll):
         self.motor = motor
         self.motorSpeed = mqtt_client("localhost","homebridge",nameSpeed, service_type = "Lightbulb", characteristic = "Brightness", command = self.setSpeedMotor)
         self.motorSwitchOnOff = mqtt_client("localhost","homebridge",nameSwitch, command = self.startStop)
