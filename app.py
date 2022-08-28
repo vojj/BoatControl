@@ -31,10 +31,10 @@ _event = EventDispatcher()
 
 # Init area
 motor1 = esc_gpio(0, 100, 18, 50)  # GPIO18, PWM0
-motor2 = esc_gpio(0, 100, 13, 50)  # GPIO18, PWM1
+motor2 = esc_gpio(0, 100, 13, 50)  # GPIO13, PWM1
 speed1 = Gpio(17, pigpio.INPUT)  # Input
-speed2 = Gpio(18, pigpio.INPUT)  # Input
-speed3 = Gpio(19, pigpio.INPUT)  # Input
+speed2 = Gpio(27, pigpio.INPUT)  # Input
+speed3 = Gpio(22, pigpio.INPUT)  # Input
 
 # Init i/o
 mainswitch1 = Controller_mainswitch(23, commandrelease=motor1.setRelease)
